@@ -44,7 +44,7 @@ public class Chess {
                         }
                     }
                 }
-                else if(count % 2 != 0){
+                else if(count % 2 != 0){ //TODO if we end up here it is ofc not 0 because we check for 0
                     //direction RIGHT (approaching column 7)
                     for(int b = (getKingColumn(board,turn) + 1); b < board[a].length; b++) { // square by square from the king and out in the current direction (square in direction)
                         if(board[y][b].equals("r") || board[y][b].equals("q")){ //square contains opponent rook or queen
@@ -421,7 +421,7 @@ public class Chess {
 
             //accept and check user's selected piece
             if(turn % 2 == 0){ //player 1
-                if(isKingCheck(board,turn,row2,col2) == true){
+                if(isKingCheck(board, turn, row2, col2)){
                     System.out.println("Player 1, your king is in check.");
                 }
                 System.out.println("Player 1, insert the piece you want to move.");
@@ -432,7 +432,7 @@ public class Chess {
                 checkPieceSelection(board,turn,row1,col1,row2,col2);
             }
             else{ //player 2
-                if(isKingCheck(board,turn,row2,col2) == true){
+                if(isKingCheck(board, turn, row2, col2)){
                     System.out.println("Player 2, your king is in check.");
                 }
                 System.out.println("Player 2, insert the piece you want to move.");
@@ -492,7 +492,7 @@ public class Chess {
             }
             else{
                 move(board,row1,col1,row2,col2);
-                if(isKingCheck(board,turn,row2,col2) == true){
+                if(isKingCheck(board, turn, row2, col2)){
                     board[row1][col1] = board[row2][col2];
                     board[row2][col2] = " ";
                     System.out.println("");
@@ -515,7 +515,7 @@ public class Chess {
             }
             else{
                 move(board,row1,col1,row2,col2);
-                if(isKingCheck(board,turn,row2,col2) == true){
+                if(isKingCheck(board, turn, row2, col2)){
                     board[row1][col1] = board[row2][col2];
                     board[row2][col2] = " ";
                     System.out.println("");
@@ -530,265 +530,203 @@ public class Chess {
     }
 
     public static boolean pieceMovement(String[][] board, int row2, int col2, int row1, int col1){
-        if(board[row1][col1].equals("p") || board[row1][col1].equals("P")){
-            if(board[row1][col1].equals("p")){
-                if(row2 == row1 + 3 || row2 == row1 + 4 || row2 == row1 + 5){
-                    return false;
-                }
+        switch (board[row1][col1]) {
+            case "p", "P" -> {
+                if (board[row1][col1].equals("p")) {
+                    if (row2 == row1 + 3 || row2 == row1 + 4 || row2 == row1 + 5) {
+                        return false;
+                    }
 
-                if((row2 == row1 + 1 || row2 == row1 + 2) && row1 == 1 && board[row2][col2].equals(" ")){
-                    return true;
-                }
-                else if(row2 == row1 + 1 && col1 == col2 && board[row2][col2].equals(" ")){
-                    return true;
-                }
-                else if(row2 == row1  + 1 && (col2 == col1 + 1 || col2 == col1 - 1)){
-                    return true;
-                }
-            }
-            else if(board[row1][col1].equals("P")){
-                if(row2 == row1 - 3 || row2 == row1 - 4 || row2 == row1 - 5){
-                    return false;
-                }
+                    if ((row2 == row1 + 1 || row2 == row1 + 2) && row1 == 1 && board[row2][col2].equals(" ")) {
+                        return true;
+                    } else if (row2 == row1 + 1 && col1 == col2 && board[row2][col2].equals(" ")) {
+                        return true;
+                    } else if (row2 == row1 + 1 && (col2 == col1 + 1 || col2 == col1 - 1)) {
+                        return true;
+                    }
+                } else if (board[row1][col1].equals("P")) {
+                    if (row2 == row1 - 3 || row2 == row1 - 4 || row2 == row1 - 5) {
+                        return false;
+                    }
 
-                if((row2 == row1 - 1 || row2 == row1 - 2) && row1 == 6 && board[row2][col2].equals(" ")){
-                    return true;
-                }
-                else if(row2 == row1 - 1 && col1 == col2 && board[row2][col2].equals(" ")){
-                    return true;
-                }
-                else if(row2 == row1  - 1 && (col2 == col1 - 1 || col2 == col1 + 1)){
-                    return true;
-                }
-            }
-        }
-        else if(board[row1][col1].equals("r") || board[row1][col1].equals("R")){
-            if(board[row1][col1].equals("r")){
-                if(row2 == row1 && col2 == col1){
-                    return false;
-                }
-                else if(col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7){
-                    return false;
-                }
-                else if((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)){
-                    return true;
-                }
-                else if((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)){
-                    return true;
+                    if ((row2 == row1 - 1 || row2 == row1 - 2) && row1 == 6 && board[row2][col2].equals(" ")) {
+                        return true;
+                    } else if (row2 == row1 - 1 && col1 == col2 && board[row2][col2].equals(" ")) {
+                        return true;
+                    } else if (row2 == row1 - 1 && (col2 == col1 - 1 || col2 == col1 + 1)) {
+                        return true;
+                    }
                 }
             }
-            else if(board[row1][col1].equals("R")){
-                if(row2 == row1 && col2 == col1){
-                    return false;
-                }
-                else if(col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7){
-                    return false;
-                }
-                else if((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)){
-                    return true;
-                }
-                else if((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)){
-                    return true;
-                }
-            }
-        }
-        else if(board[row1][col1].equals("n") || board[row1][col1].equals("N")){
-            if(board[row1][col1].equals("n")){
-                if((row2 == row1 + 1 && (col2 == col1 - 2 || col2 == col1 + 2))){
-                    return true;
-                }
-                else if((row2 == row1 - 1 && (col2 == col1 - 2 || col2 == col1 + 2))){
-                    return true;
-                }
-                else if((row2 == row1 + 2 && (col2 == col1 - 1 || col2 == col1 + 1))){
-                    return true;
-                }
-                else if((row2 == row1 - 2 && (col2 == col1 - 1 || col2 == col1 + 1))){
-                    return true;
+            case "r", "R" -> {
+                if (board[row1][col1].equals("r")) {
+                    if (row2 == row1 && col2 == col1) {
+                        return false;
+                    } else if (col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7) {
+                        return false;
+                    } else if ((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)) {
+                        return true;
+                    } else if ((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)) {
+                        return true;
+                    }
+                } else if (board[row1][col1].equals("R")) {
+                    if (row2 == row1 && col2 == col1) {
+                        return false;
+                    } else if (col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7) {
+                        return false;
+                    } else if ((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)) {
+                        return true;
+                    } else if ((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)) {
+                        return true;
+                    }
                 }
             }
-            else if(board[row1][col1].equals("N")){
-                if((row2 == row1 + 1 && (col2 == col1 - 2 || col2 == col1 + 2))){
-                    return true;
-                }
-                else if((row2 == row1 - 1 && (col2 == col1 - 2 || col2 == col1 + 2))){
-                    return true;
-                }
-                else if((row2 == row1 + 2 && (col2 == col1 - 1 || col2 == col1 + 1))){
-                    return true;
-                }
-                else if((row2 == row1 - 2 && (col2 == col1 - 1 || col2 == col1 + 1))){
-                    return true;
-                }
-            }
-        }
-        else if(board[row1][col1].equals("b") || board[row1][col1].equals("B")){
-            if(board[row1][col1].equals("b")){
-                if((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)){
-                    return true;
-                }
-                else if((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)){
-                    return true;
-                }
-                else if((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)){
-                    return true;
-                }
-                else if((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)){
-                    return true;
-                }
-                else if((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)){
-                    return true;
-                }
-                else if((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)){
-                    return true;
-                }
-                else if((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)){
-                    return true;
+            case "n", "N" -> {
+                if (board[row1][col1].equals("n")) {
+                    if ((row2 == row1 + 1 && (col2 == col1 - 2 || col2 == col1 + 2))) {
+                        return true;
+                    } else if ((row2 == row1 - 1 && (col2 == col1 - 2 || col2 == col1 + 2))) {
+                        return true;
+                    } else if ((row2 == row1 + 2 && (col2 == col1 - 1 || col2 == col1 + 1))) {
+                        return true;
+                    } else if ((row2 == row1 - 2 && (col2 == col1 - 1 || col2 == col1 + 1))) {
+                        return true;
+                    }
+                } else if (board[row1][col1].equals("N")) {
+                    if ((row2 == row1 + 1 && (col2 == col1 - 2 || col2 == col1 + 2))) {
+                        return true;
+                    } else if ((row2 == row1 - 1 && (col2 == col1 - 2 || col2 == col1 + 2))) {
+                        return true;
+                    } else if ((row2 == row1 + 2 && (col2 == col1 - 1 || col2 == col1 + 1))) {
+                        return true;
+                    } else if ((row2 == row1 - 2 && (col2 == col1 - 1 || col2 == col1 + 1))) {
+                        return true;
+                    }
                 }
             }
-            else if(board[row1][col1].equals("B")){
-                if((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)){
-                    return true;
-                }
-                else if((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)){
-                    return true;
-                }
-                else if((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)){
-                    return true;
-                }
-                else if((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)){
-                    return true;
-                }
-                else if((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)){
-                    return true;
-                }
-                else if((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)){
-                    return true;
-                }
-                else if((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)){
-                    return true;
-                }
-            }
-        }
-        else if(board[row1][col1].equals("q") || board[row1][col1].equals("Q")){
-            if(board[row1][col1].equals("q")){
-                if(row2 == row1 && col2 == col1){
-                    return false;
-                }
-                else if(col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7){
-                    return false;
-                }
-                else if((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)){
-                    return true;
-                }
-                else if((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)){
-                    return true;
-                }
-                else if((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)){
-                    return true;
-                }
-                else if((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)){
-                    return true;
-                }
-                else if((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)){
-                    return true;
-                }
-                else if((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)){
-                    return true;
-                }
-                else if((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)){
-                    return true;
-                }
-                else if((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)){
-                    return true;
-                }
-                else if((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)){
-                    return true;
+            case "b", "B" -> {
+                if (board[row1][col1].equals("b")) {
+                    if ((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)) {
+                        return true;
+                    } else if ((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)) {
+                        return true;
+                    } else if ((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)) {
+                        return true;
+                    } else if ((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)) {
+                        return true;
+                    } else if ((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)) {
+                        return true;
+                    } else if ((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)) {
+                        return true;
+                    } else if ((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)) {
+                        return true;
+                    }
+                } else if (board[row1][col1].equals("B")) {
+                    if ((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)) {
+                        return true;
+                    } else if ((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)) {
+                        return true;
+                    } else if ((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)) {
+                        return true;
+                    } else if ((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)) {
+                        return true;
+                    } else if ((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)) {
+                        return true;
+                    } else if ((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)) {
+                        return true;
+                    } else if ((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)) {
+                        return true;
+                    }
                 }
             }
-            else if(board[row1][col1].equals("Q")){
-                if(row2 == row1 && col2 == col1){
-                    return false;
-                }
-                else if(col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7){
-                    return false;
-                }
-                else if((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)){
-                    return true;
-                }
-                else if((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)){
-                    return true;
-                }
-                else if((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)){
-                    return true;
-                }
-                else if((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)){
-                    return true;
-                }
-                else if((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)){
-                    return true;
-                }
-                else if((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)){
-                    return true;
-                }
-                else if((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)){
-                    return true;
-                }
-                else if((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)){
-                    return true;
-                }
-                else if((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)){
-                    return true;
-                }
-            }
-        }
-        else if(board[row1][col1].equals("k") || board[row1][col1].equals("K")){
-            if(board[row1][col1].equals("k")){
-                if((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1)){
-                    return true;
-                }
-                else if((row2 == row1 - 1 && col2 == col1 + 1) || (row2 == row1 + 1 && col2 == col1 - 1)){
-                    return true;
-                }
-                else if((row2 == row1 && col2 == col1 - 1) || (row2 == row1 && col2 == col1 + 1)){
-                    return true;
-                }
-                else if((row2 == row1 - 1 && col2 == col1) || (row2 == row1 + 1 && col2 == col1)){
-                    return true;
-                }
-                else if((board[0][4].equals("k")) && (board[0][5].equals(" ")) && (board[0][6].equals(" ")) && (board[0][7].equals("r")) && (col2 == col1 + 2) && (row2 == row1)){
-                    board[0][5] = "r";
-                    board[0][7] = " ";
-                    return true;
-                }
-                else if((board[0][4].equals("k")) && (board[0][3].equals(" ")) && (board[0][2].equals(" ")) && (board[0][1].equals(" ")) && (board[0][0].equals("r")) && (col2 == col1 - 2) && (row2 == row1)){
-                    board[0][3] = "r";
-                    board[0][0] = " ";
-                    return true;
+            case "q", "Q" -> {
+                if (board[row1][col1].equals("q")) {
+                    if (row2 == row1 && col2 == col1) {
+                        return false;
+                    } else if (col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7) {
+                        return false;
+                    } else if ((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)) {
+                        return true;
+                    } else if ((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)) {
+                        return true;
+                    } else if ((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)) {
+                        return true;
+                    } else if ((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)) {
+                        return true;
+                    } else if ((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)) {
+                        return true;
+                    } else if ((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)) {
+                        return true;
+                    } else if ((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)) {
+                        return true;
+                    } else if ((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)) {
+                        return true;
+                    } else if ((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)) {
+                        return true;
+                    }
+                } else if (board[row1][col1].equals("Q")) {
+                    if (row2 == row1 && col2 == col1) {
+                        return false;
+                    } else if (col2 > 7 || col2 < 0 || row2 < 0 || row2 > 7) {
+                        return false;
+                    } else if ((row2 == row1 && col2 != col1) && (col2 > col1 || col2 < col1)) {
+                        return true;
+                    } else if ((row2 != row1 && col2 == col1) && (row2 > row1 || row2 < row1)) {
+                        return true;
+                    } else if ((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1) || (row2 == row1 + 1 && col2 == col1 - 1) || (row2 == row1 - 1 && col2 == col1 + 1)) {
+                        return true;
+                    } else if ((row2 == row1 + 2 && col2 == col1 + 2) || (row2 == row1 - 2 && col2 == col1 - 2) || (row2 == row1 + 2 && col2 == col1 - 2) || (row2 == row1 - 2 && col2 == col1 + 2)) {
+                        return true;
+                    } else if ((row2 == row1 + 3 && col2 == col1 + 3) || (row2 == row1 - 3 && col2 == col1 - 3) || (row2 == row1 + 3 && col2 == col1 - 3) || (row2 == row1 - 3 && col2 == col1 + 3)) {
+                        return true;
+                    } else if ((row2 == row1 + 4 && col2 == col1 + 4) || (row2 == row1 - 4 && col2 == col1 - 4) || (row2 == row1 + 4 && col2 == col1 - 4) || (row2 == row1 - 4 && col2 == col1 + 4)) {
+                        return true;
+                    } else if ((row2 == row1 + 5 && col2 == col1 + 5) || (row2 == row1 - 5 && col2 == col1 - 5) || (row2 == row1 + 5 && col2 == col1 - 5) || (row2 == row1 - 5 && col2 == col1 + 5)) {
+                        return true;
+                    } else if ((row2 == row1 + 6 && col2 == col1 + 6) || (row2 == row1 - 6 && col2 == col1 - 6) || (row2 == row1 + 6 && col2 == col1 - 6) || (row2 == row1 - 6 && col2 == col1 + 6)) {
+                        return true;
+                    } else if ((row2 == row1 + 7 && col2 == col1 + 7) || (row2 == row1 - 7 && col2 == col1 - 7) || (row2 == row1 + 7 && col2 == col1 - 7) || (row2 == row1 - 7 && col2 == col1 + 7)) {
+                        return true;
+                    }
                 }
             }
-            else if(board[row1][col1].equals("K")){
-                if((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1)){
-                    return true;
-                }
-                else if((row2 == row1 - 1 && col2 == col1 + 1) || (row2 == row1 + 1 && col2 == col1 - 1)){
-                    return true;
-                }
-                else if((row2 == row1 && col2 == col1 - 1) || (row2 == row1 && col2 == col1 + 1)){
-                    return true;
-                }
-                else if((row2 == row1 - 1 && col2 == col1) || (row2 == row1 + 1 && col2 == col1)){
-                    return true;
-                }
-                else if((board[7][4].equals("K")) && (board[7][5].equals(" ")) && (board[7][6].equals(" ")) && (board[7][7].equals("R")) && (col2 == col1 + 2) && (row2 == row1)){
-                    board[7][5] = "R";
-                    board[7][7] = " ";
-                    return true;
-                }
-                else if((board[7][4].equals("K")) && (board[7][3].equals(" ")) && (board[7][2].equals(" ")) && (board[7][1].equals(" ")) && (board[7][0].equals("R")) && (col2 == col1 - 2) && (row2 == row1)){
-                    board[7][3] = "R";
-                    board[7][0] = " ";
-                    return true;
+            case "k", "K" -> {
+                if (board[row1][col1].equals("k")) {
+                    if ((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1)) {
+                        return true;
+                    } else if ((row2 == row1 - 1 && col2 == col1 + 1) || (row2 == row1 + 1 && col2 == col1 - 1)) {
+                        return true;
+                    } else if ((row2 == row1 && col2 == col1 - 1) || (row2 == row1 && col2 == col1 + 1)) {
+                        return true;
+                    } else if ((row2 == row1 - 1 && col2 == col1) || (row2 == row1 + 1 && col2 == col1)) {
+                        return true;
+                    } else if ((board[0][4].equals("k")) && (board[0][5].equals(" ")) && (board[0][6].equals(" ")) && (board[0][7].equals("r")) && (col2 == col1 + 2) && (row2 == row1)) {
+                        board[0][5] = "r";
+                        board[0][7] = " ";
+                        return true;
+                    } else if ((board[0][4].equals("k")) && (board[0][3].equals(" ")) && (board[0][2].equals(" ")) && (board[0][1].equals(" ")) && (board[0][0].equals("r")) && (col2 == col1 - 2) && (row2 == row1)) {
+                        board[0][3] = "r";
+                        board[0][0] = " ";
+                        return true;
+                    }
+                } else if (board[row1][col1].equals("K")) {
+                    if ((row2 == row1 + 1 && col2 == col1 + 1) || (row2 == row1 - 1 && col2 == col1 - 1)) {
+                        return true;
+                    } else if ((row2 == row1 - 1 && col2 == col1 + 1) || (row2 == row1 + 1 && col2 == col1 - 1)) {
+                        return true;
+                    } else if ((row2 == row1 && col2 == col1 - 1) || (row2 == row1 && col2 == col1 + 1)) {
+                        return true;
+                    } else if ((row2 == row1 - 1 && col2 == col1) || (row2 == row1 + 1 && col2 == col1)) {
+                        return true;
+                    } else if ((board[7][4].equals("K")) && (board[7][5].equals(" ")) && (board[7][6].equals(" ")) && (board[7][7].equals("R")) && (col2 == col1 + 2) && (row2 == row1)) {
+                        board[7][5] = "R";
+                        board[7][7] = " ";
+                        return true;
+                    } else if ((board[7][4].equals("K")) && (board[7][3].equals(" ")) && (board[7][2].equals(" ")) && (board[7][1].equals(" ")) && (board[7][0].equals("R")) && (col2 == col1 - 2) && (row2 == row1)) {
+                        board[7][3] = "R";
+                        board[7][0] = " ";
+                        return true;
+                    }
                 }
             }
         }
@@ -796,7 +734,7 @@ public class Chess {
         return false;
     }
 
-    public static void checkPieceSelection(String[][] board, int turn, int row1, int col1, int row2, int col2) {
+    public static void checkPieceSelection(String[][] board, int turn, int row1, int col1, int row2, int col2) { //TODO row2 and col2 arent used?
         // Define the valid pieces based on the turn
         String validPieces = turn % 2 == 0 ? "prnbqk" : "PRNBQK";
 
@@ -812,7 +750,12 @@ public class Chess {
     }
 
 
-    public static void printBoard(String[][] board){ //prints the chess board's current state
+    /**
+     * Prints the current state of the chessboard.
+     *
+     * @param board A 2D string array representing the chessboard.
+     */
+    public static void printBoard(String[][] board){
         int iteration = 0;
         System.out.println("    0   1   2   3   4   5   6   7");
         System.out.println("  ---------------------------------");
