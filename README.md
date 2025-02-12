@@ -9,3 +9,4 @@ My friends chest program, "Improved"
 * Javadoc for printBoard
 * System.out.println(""); -> System.out.println();
 * playChess now reads its gameEnd argument
+* Overhauled isKingCheck

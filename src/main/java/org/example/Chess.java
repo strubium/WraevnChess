@@ -4,8 +4,16 @@ import java.util.*;
 
 public class Chess {
     public static Scanner kb = new Scanner(System.in); //collects user input from the console
-    public static String[][] board = {{"r","n","b","q","k","b","n","r"},{"p","p","p","p","p","p","p","p"},{" "," "," "," "," "," "," "," "},{" "," "," "," "," "," "," "," "},{" "," "," "," "," "," "," "," "},{" "," "," "," "," "," "," "," "},{"P","P","P","P","P","P","P","P"},{"R","N","B","Q","K","B","N","R"}};
-    public static int turn = 0; //Keeps track who's turn it is
+    public static String[][] board = {
+            {"r","n","b","q","k","b","n","r"},
+            {"p","p","p","p","p","p","p","p"},
+            {" "," "," "," "," "," "," "," "},
+            {" "," "," "," "," "," "," "," "},
+            {" "," "," "," "," "," "," "," "},
+            {" "," "," "," "," "," "," "," "},
+            {"P","P","P","P","P","P","P","P"},
+            {"R","N","B","Q","K","B","N","R"}};
+    public static int turn = 0; //Keeps track whose turn it is
     public static int row1; //Player's row selection for the piece to move
     public static int col1; //Player's column selection for the piece to move
     public static int row2; //Player's row selection for the location of the selected piece to move
@@ -27,346 +35,99 @@ public class Chess {
 
 //methods used to run the overall program
 
-    public static boolean isKingCheck(String[][] board, int turn, int row2, int col2){ //checks if either player's king is in check
-        if(turn % 2 == 0){
-            // Check straight lines
-            int y = getKingRow(board,turn); //row of king
-            int count = 0; //iteration counter for up/down/left/right directions
-            for(int a = getKingRow(board,turn); a < board.length; a++) { // LEFT and RIGHT (directions)
-                if(count % 2 == 0){
-                    //direction LEFT (approaching column 0)
-                    for(int b = (getKingColumn(board,turn) - 1); b >= 0; b--) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[y][b].equals("r") || board[y][b].equals("q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[y][b].equals("P") || board[y][b].equals("N") || board[y][b].equals("B") || board[y][b].equals("R") || board[y][b].equals("Q")){ //square contains friendly piece
-                            b = -1;
-                        }
-                    }
-                }
-                else if(count % 2 != 0){ //TODO if we end up here it is ofc not 0 because we check for 0
-                    //direction RIGHT (approaching column 7)
-                    for(int b = (getKingColumn(board,turn) + 1); b < board[a].length; b++) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[y][b].equals("r") || board[y][b].equals("q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[y][b].equals("P") || board[y][b].equals("N") || board[y][b].equals("B") || board[y][b].equals("R") || board[y][b].equals("Q")){ //square contains friendly piece
-                            b = 8;
-                        }
-                    }
-                }
-                count += 1;
-            }
+    public static boolean isKingCheck(String[][] board, int turn) {
+        int kingRow = getKingRow(board, turn);
+        int kingCol = getKingColumn(board, turn);
+        boolean isWhite = (turn % 2 == 0);
 
-            int z = getKingColumn(board,turn); //column of king
-            count = 0;
-            for(int c = 0; c < 8; c++) { // UP and DOWN (directions)
-                if(count % 2 == 0){
-                    //direction UP (approaching row 0)
-                    for(int d = (getKingRow(board,turn) - 1); d >= 0; d--) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[d][z].equals("r") || board[d][z].equals("q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[d][z].equals("P") || board[d][z].equals("N") || board[d][z].equals("B") || board[d][z].equals("R") || board[d][z].equals("Q")){ //square contains friendly piece
-                            d = -1;
-                        }
-                    }
-                }
-                else if(count % 2 != 0){
-                    //direction DOWN (approaching row 7)
-                    for(int d = (getKingRow(board,turn) + 1); d < board.length; d++) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[d][z].equals("r") || board[d][z].equals("q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[d][z].equals("P") || board[d][z].equals("N") || board[d][z].equals("B") || board[d][z].equals("R") || board[d][z].equals("Q")){ //square contains friendly piece
-                            d = 8;
-                        }
-                    }
-                }
-                count += 1;
-            }
-
-
-            count = 0;
-            int work = getKingColumn(board,turn);
-            // Check diagonals
-            for(int e = (getKingColumn(board,turn) + 1); e < board.length; e++){ // RIGHT-UP and RIGHT-DOWN
-                work = getKingColumn(board,turn);
-                if(count % 2 == 0){
-                    for(int f = (getKingRow(board,turn) - 1); f >= 0; f--){ // square by square from the king and out in the current direction
-                        work += 1;
-                        if(work > 7){
-                            break;
-                        }
-
-                        if(board[f][work].equals("b") || board[f][work].equals("q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[f][work].equals("P") || board[f][work].equals("N") || board[f][work].equals("B") || board[f][work].equals("R") || board[f][work].equals("Q")){ //square contains friendly piece
-                            f = -1;
-                        }
-                    }
-                    e = e -1;
-                }
-                else if(count % 2 != 0){
-                    for(int f = (getKingRow(board,turn) + 1); f < board.length; f++){ // square by square from the king and out in the current direction
-                        work += 1;
-                        if(work > 7){
-                            break;
-                        }
-
-                        if(board[f][work].equals("b") || board[f][work].equals("q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[f][work].equals("P") || board[f][work].equals("N") || board[f][work].equals("B") || board[f][work].equals("R") || board[f][work].equals("Q")){ //square contains friendly piece
-                            f = 9;
-                        }
-                    }
-                }
-                count += 1;
-            }
-
-            count = 0;
-            for(int g = (getKingColumn(board,turn) - 1); g >= 0; g--){ // LEFT-UP and LEFT-DOWN
-                work = getKingColumn(board,turn);
-                if(count % 2 == 0){
-                    for(int h = (getKingRow(board,turn) - 1); h >= 0; h--){ // square by square from the king and out in the current direction
-                        work -= 1;
-                        if(work < 0){
-                            break;
-                        }
-
-                        if(board[h][work].equals("b") || board[h][work].equals("q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[h][work].equals("P") || board[h][work].equals("N") || board[h][work].equals("B") || board[h][work].equals("R") || board[h][work].equals("Q")){ //square contains friendly piece
-                            h = -1;
-                        }
-                    }
-                }
-                else if(count % 2 != 0){
-                    for(int h = (getKingRow(board,turn) + 1); h < board.length; h++){ // square by square from the king and out in the current direction
-                        work -= 1;
-                        if(work < 0){
-                            break;
-                        }
-
-                        if(board[h][work].equals("b") || board[h][work].equals("q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[h][work].equals("P") || board[h][work].equals("N") || board[h][work].equals("B") || board[h][work].equals("R") || board[h][work].equals("Q")){ //square contains friendly piece
-                            h = 9;
-                        }
-                    }
-                }
-                count += 1;
-            }
-            count = 0;
-
-            // Check pawns
-            if(board[getKingRow(board,turn) - 1][getKingColumn(board,turn) + 1].equals("p") || board[getKingRow(board,turn) - 1][getKingColumn(board,turn) - 1].equals("p")){ //squares where pawns would threaten the king contains pawns
-                return true;
-            }
-
-            // Check king, this is to find if a square is legal to move to only
-        /*if(){ //squares where a king would threaten the king contains a king
+        // Check straight lines (Rooks and Queens)
+        if (isThreatenedByLinear(board, kingRow, kingCol, isWhite)) {
             return true;
-        }*/
-
-            // Check knights -
-            if(getKingRow(board,turn) <= 5 && getKingColumn(board,turn) <= 5 && getKingRow(board,turn) >= 2 && getKingColumn(board,turn) >= 2){ //squares where knights would threaten the king contains knights
-                if(board[getKingRow(board,turn) + 1][getKingColumn(board,turn) - 2].equals("n") || board[getKingRow(board,turn) + 1][getKingColumn(board,turn) + 2].equals("n") || board[getKingRow(board,turn) - 1][getKingColumn(board,turn) - 2].equals("n") || board[getKingRow(board,turn) - 1][getKingColumn(board,turn) + 2].equals("n") || board[getKingRow(board,turn) + 2][getKingColumn(board,turn) + 1].equals("n") || board[getKingRow(board,turn) + 2][getKingColumn(board,turn) - 1].equals("n") || board[getKingRow(board,turn) - 2][getKingColumn(board,turn) - 1].equals("n") || board[getKingRow(board,turn) - 2][getKingColumn(board,turn) + 1].equals("n")){
-                    return true;
-                }
-            }
-            else if(((getKingRow(board,turn) >= 1 && getKingRow(board,turn) <= 5) && (getKingColumn(board,turn) >= 1 && getKingColumn(board,turn) <= 6))){
-                if(board[getKingRow(board,turn) + 2][getKingColumn(board,turn) - 1].equals("n") || board[getKingRow(board,turn) + 2][getKingColumn(board,turn) + 1].equals("n")){
-                    return true;
-                }
-            }
-            else if(getKingRow(board,turn) < 1 && (getKingColumn(board,turn) >= 1) && getKingColumn(board,turn) <= 6){
-                if(board[getKingRow(board,turn) + 2][getKingColumn(board,turn) + 1].equals("n") || board[getKingRow(board,turn) + 2][getKingColumn(board,turn) - 1].equals("n")){
-                    return true;
-                }
-            }
-            else if(getKingRow(board,turn) > 6 && getKingColumn(board,turn) >= 1 && getKingColumn(board,turn) <= 6){
-                if(board[getKingRow(board,turn) - 2][getKingColumn(board,turn) + 1].equals("n") || board[getKingRow(board,turn) - 2][getKingColumn(board,turn) - 1].equals("n")){
-                    return true;
-                }
-            }
-            else if(getKingRow(board,turn) > 6 && getKingColumn(board,turn) > 1 && getKingColumn(board,turn) < 6){
-                //System.out.println("yeet");
-                if(board[getKingRow(board,turn) - 1][getKingColumn(board,turn) + 2].equals("n") || board[getKingRow(board,turn) - 1][getKingColumn(board,turn) - 2].equals("n")){
-                    return true;
-                }
-            }
-            else if(getKingRow(board,turn) < 1 && getKingColumn(board,turn) < 1){
-                if(board[getKingRow(board,turn) + 2][getKingColumn(board,turn) + 1].equals("n") || board[getKingRow(board,turn) + 1][getKingColumn(board,turn) + 2].equals("n")){
-                    return true;
-                }
-            }
-            else if(getKingRow(board,turn) > 6 && getKingColumn(board,turn) > 6){
-                if(board[getKingRow(board,turn) - 2][getKingColumn(board,turn) - 1].equals("n") || board[getKingRow(board,turn) - 1][getKingColumn(board,turn) - 2].equals("n")){
-                    return true;
-                }
-            }
-
-
         }
-        else if(turn % 2 != 0){
-            // Check straight lines
-            int y = getKingRow(board,turn); //row of king
-            int count = 0; //iteration counter for up/down/left/right directions
-            for(int a = getKingRow(board,turn); a < board.length; a++) { // LEFT and RIGHT (directions)
-                if(count % 2 == 0){
-                    //direction LEFT (approaching column 0)
-                    for(int b = (getKingColumn(board,turn) - 1); b >= 0; b--) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[y][b].equals("R") || board[y][b].equals("Q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[y][b].equals("p") || board[y][b].equals("n") || board[y][b].equals("b") || board[y][b].equals("r") || board[y][b].equals("q")){ //square contains friendly piece
-                            b = -1;
-                        }
-                    }
-                }
-                else if(count % 2 != 0){
-                    //direction RIGHT (approaching column 7)
-                    for(int b = (getKingColumn(board,turn) + 1); b < board[a].length; b++) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[y][b].equals("R") || board[y][b].equals("Q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[y][b].equals("p") || board[y][b].equals("n") || board[y][b].equals("b") || board[y][b].equals("r") || board[y][b].equals("q")){ //square contains friendly piece
-                            b = 8;
-                        }
-                    }
-                }
-                count += 1;
-            }
 
-            int z = getKingColumn(board,turn); //column of king
-            count = 0;
-            for(int c = 0; c < 8; c++) { // UP and DOWN (directions)
-                if(count % 2 == 0){
-                    //direction UP (approaching row 0)
-                    for(int d = (getKingRow(board,turn) - 1); d >= 0; d--) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[d][z].equals("R") || board[d][z].equals("Q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[d][z].equals("p") || board[d][z].equals("n") || board[d][z].equals("b") || board[d][z].equals("r") || board[d][z].equals("q")){ //square contains friendly piece
-                            d = -1;
-                        }
-                    }
-                }
-                else if(count % 2 != 0){
-                    //direction DOWN (approaching row 7)
-                    for(int d = (getKingRow(board,turn) + 1); d < board.length; d++) { // square by square from the king and out in the current direction (square in direction)
-                        if(board[d][z].equals("R") || board[d][z].equals("Q")){ //square contains opponent rook or queen
-                            return true;
-                        }
-                        else if(board[d][z].equals("p") || board[d][z].equals("n") || board[d][z].equals("b") || board[d][z].equals("r") || board[d][z].equals("q")){ //square contains friendly piece
-                            d = 8;
-                        }
-                    }
-                }
-                count += 1;
-            }
-
-
-            count = 0;
-            int work = getKingColumn(board,turn);
-            // Check diagonals
-            for(int e = (getKingColumn(board,turn) + 1); e < board.length; e++){ // RIGHT-UP and RIGHT-DOWN
-                work = getKingColumn(board,turn);
-                if(count % 2 == 0){
-                    for(int f = (getKingRow(board,turn) - 1); f >= 0; f--){ // square by square from the king and out in the current direction
-                        work += 1;
-                        if(work > 7){
-                            break;
-                        }
-
-                        if(board[f][work].equals("B") || board[f][work].equals("Q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[f][work].equals("p") || board[f][work].equals("n") || board[f][work].equals("b") || board[f][work].equals("r") || board[f][work].equals("q")){ //square contains friendly piece
-                            f = -1;
-                        }
-                    }
-                    e = e -1;
-                }
-                else if(count % 2 != 0){
-                    for(int f = (getKingRow(board,turn) + 1); f < board.length; f++){ // square by square from the king and out in the current direction
-                        work += 1;
-                        if(work > 7){
-                            break;
-                        }
-
-                        if(board[f][work].equals("B") || board[f][work].equals("Q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[f][work].equals("p") || board[f][work].equals("n") || board[f][work].equals("b") || board[f][work].equals("r") || board[f][work].equals("q")){ //square contains friendly piece
-                            f = 9;
-                        }
-                    }
-                }
-                count += 1;
-            }
-
-            count = 0;
-            for(int g = (getKingColumn(board,turn) - 1); g >= 0; g--){ // LEFT-UP and LEFT-DOWN
-                work = getKingColumn(board,turn);
-                if(count % 2 == 0){
-                    for(int h = (getKingRow(board,turn) - 1); h >= 0; h--){ // square by square from the king and out in the current direction
-                        work -= 1;
-                        if(work < 0){
-                            break;
-                        }
-
-                        if(board[h][work].equals("B") || board[h][work].equals("Q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[h][work].equals("p") || board[h][work].equals("n") || board[h][work].equals("b") || board[h][work].equals("r") || board[h][work].equals("q")){ //square contains friendly piece
-                            h = -1;
-                        }
-                    }
-                }
-                else if(count % 2 != 0){
-                    for(int h = (getKingRow(board,turn) + 1); h < board.length; h++){ // square by square from the king and out in the current direction
-                        work -= 1;
-                        if(work < 0){
-                            break;
-                        }
-
-                        if(board[h][work].equals("B") || board[h][work].equals("Q")){ //square contains opponent bishop or queen
-                            return true;
-                        }
-                        else if(board[h][work].equals("p") || board[h][work].equals("n") || board[h][work].equals("b") || board[h][work].equals("r") || board[h][work].equals("q")){ //square contains friendly piece
-                            h = 9;
-                        }
-                    }
-                }
-                count += 1;
-            }
-            count = 0;
-
-            // Check pawns
-            if(board[getKingRow(board,turn) + 1][getKingColumn(board,turn) + 1].equals("P") || board[getKingRow(board,turn) + 1][getKingColumn(board,turn) - 1].equals("P")){ //squares where pawns would threaten the king contains pawns
-                return true;
-            }
-
-            // Check king, this is to find if a square is legal to move to only
-        /*if(){//squares where a king would threaten the king constains a king
+        // Check diagonals (Bishops and Queens)
+        if (isThreatenedByDiagonal(board, kingRow, kingCol, isWhite)) {
             return true;
-        }*/
+        }
 
-            // Check knights
-        /*if(board[row2][col2].equals("n") && (row2 == row1 + 1 && (col2 == col1 - 2 || col2 == col1 + 2)).equals("K") || (row2 == row1 - 1 && (col2 == col1 - 2 || col2 == col1 + 2)).equals("K") || (row2 == row1 + 2 && (col2 == col1 - 1 || col2 == col1 + 1)).equals("K") || (row2 == row1 - 2 && (col2 == col1 - 1 || col2 == col1 + 1)).equals("K")){ //squares where knights would threaten the king contains knights
+        // Check knights
+        if (isThreatenedByKnights(board, kingRow, kingCol, isWhite)) {
             return true;
-        }*/
+        }
 
+        // Check pawns
+        if (isThreatenedByPawns(board, kingRow, kingCol, isWhite)) {
+            return true;
         }
 
         return false;
     }
+
+    // Helper method to check threats from rooks and queens (straight-line attacks)
+    private static boolean isThreatenedByLinear(String[][] board, int row, int col, boolean isWhite) {
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Right, Left, Down, Up
+        char enemyRook = isWhite ? 'r' : 'R';
+        char enemyQueen = isWhite ? 'q' : 'Q';
+
+        return isThreatened(board, row, col, directions, enemyRook, enemyQueen);
+    }
+
+    // Helper method to check threats from bishops and queens (diagonal attacks)
+    private static boolean isThreatenedByDiagonal(String[][] board, int row, int col, boolean isWhite) {
+        int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}; // Diagonal directions
+        char enemyBishop = isWhite ? 'b' : 'B';
+        char enemyQueen = isWhite ? 'q' : 'Q';
+
+        return isThreatened(board, row, col, directions, enemyBishop, enemyQueen);
+    }
+
+    // Generalized function for linear or diagonal threats
+    private static boolean isThreatened(String[][] board, int row, int col, int[][] directions, char enemyPiece1, char enemyPiece2) {
+        for (int[] dir : directions) {
+            int r = row, c = col;
+            while (isValid(r += dir[0], c += dir[1])) {
+                if (board[r][c].equals(String.valueOf(enemyPiece1)) || board[r][c].equals(String.valueOf(enemyPiece2))) {
+                    return true;
+                }
+                if (!board[r][c].equals(".")) { // Blocked by any piece
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Helper method to check knight threats
+    private static boolean isThreatenedByKnights(String[][] board, int row, int col, boolean isWhite) {
+        int[][] knightMoves = {
+                {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+                {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+        };
+        char enemyKnight = isWhite ? 'n' : 'N';
+
+        for (int[] move : knightMoves) {
+            int r = row + move[0], c = col + move[1];
+            if (isValid(r, c) && board[r][c].equals(String.valueOf(enemyKnight))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper method to check pawn threats
+    private static boolean isThreatenedByPawns(String[][] board, int row, int col, boolean isWhite) {
+        int dir = isWhite ? -1 : 1; // White pawns move up (-1), black pawns move down (+1)
+        char enemyPawn = isWhite ? 'p' : 'P';
+
+        return (isValid(row + dir, col - 1) && board[row + dir][col - 1].equals(String.valueOf(enemyPawn))) ||
+                (isValid(row + dir, col + 1) && board[row + dir][col + 1].equals(String.valueOf(enemyPawn)));
+    }
+
+    // Helper method to check if a position is within bounds
+    private static boolean isValid(int row, int col) {
+        return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
+
 
     public static int getKingRow(String[][] board, int turn){ //returns the row location of the king depending on who's turn it is
         if(turn % 2 == 0){
@@ -392,18 +153,18 @@ public class Chess {
     }
     public static int getKingColumn(String[][] board, int turn){ //returns the column location of the king depending on who's turn it is
         if(turn % 2 == 0){
-            for(int x = 0; x < board.length; x++){
-                for(int y = 0; y < board[x].length; y++){
-                    if(board[x][y].equals("K")){
+            for (String[] strings : board) {
+                for (int y = 0; y < strings.length; y++) {
+                    if (strings[y].equals("K")) {
                         return y;
                     }
                 }
             }
         }
         else{
-            for(int x = 0; x < board.length; x++){
-                for(int y = 0; y < board[x].length; y++){
-                    if(board[x][y].equals("k")){
+            for (String[] strings : board) {
+                for (int y = 0; y < strings.length; y++) {
+                    if (strings[y].equals("k")) {
                         return y;
                     }
                 }
@@ -420,7 +181,7 @@ public class Chess {
 
             //accept and check user's selected piece
             if(turn % 2 == 0){ //player 1
-                if(isKingCheck(board, turn, row2, col2)){
+                if(isKingCheck(board, turn)){
                     System.out.println("Player 1, your king is in check.");
                 }
                 System.out.println("Player 1, insert the piece you want to move.");
@@ -431,7 +192,7 @@ public class Chess {
                 checkPieceSelection(board,turn,row1,col1,row2,col2);
             }
             else{ //player 2
-                if(isKingCheck(board, turn, row2, col2)){
+                if(isKingCheck(board, turn)){
                     System.out.println("Player 2, your king is in check.");
                 }
                 System.out.println("Player 2, insert the piece you want to move.");
@@ -491,7 +252,7 @@ public class Chess {
             }
             else{
                 move(board,row1,col1,row2,col2);
-                if(isKingCheck(board, turn, row2, col2)){
+                if(isKingCheck(board, turn)){
                     board[row1][col1] = board[row2][col2];
                     board[row2][col2] = " ";
                     System.out.println();
@@ -514,7 +275,7 @@ public class Chess {
             }
             else{
                 move(board,row1,col1,row2,col2);
-                if(isKingCheck(board, turn, row2, col2)){
+                if(isKingCheck(board, turn)){
                     board[row1][col1] = board[row2][col2];
                     board[row2][col2] = " ";
                     System.out.println();
