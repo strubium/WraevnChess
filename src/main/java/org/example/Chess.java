@@ -15,11 +15,11 @@ public class Chess {
     //main method to run program
     public static void main(String[] args) {
         System.out.println("---------- Chess ----------");
-        System.out.println("");
+        System.out.println();
         System.out.println("White is capitalized pieces, black is lowercase pieces.");
         System.out.println("Player 1 is uppercase, Player 2 is lowercase");
-        System.out.println("");
-        System.out.println("");
+        System.out.println();
+        System.out.println();
         playChess(board,turn,gameEnd,row1,col1,row2,col2);
 
 
@@ -414,10 +414,9 @@ public class Chess {
     }
 
     public static void playChess(String[][] board, int turn, boolean gameEnd, int row1, int col1, int row2, int col2){ //runs through the multiple methods to play the game of chess
-        gameEnd = false;
         printBoard(board);
-        while(gameEnd == false){
-            System.out.println("");
+        while(!gameEnd){
+            System.out.println();
 
             //accept and check user's selected piece
             if(turn % 2 == 0){ //player 1
@@ -443,7 +442,7 @@ public class Chess {
                 checkPieceSelection(board,turn,row1,col1,row2,col2);
             }
 
-            System.out.println("");
+            System.out.println();
 
             //accept and check user's input for the space to move to
             if(turn % 2 == 0){ //player 1
@@ -463,11 +462,11 @@ public class Chess {
                 checkMoveSelection(board,turn,row2,col2,row1,col1);
             }
 
-            System.out.println("");
-            System.out.println("");
+            System.out.println();
+            System.out.println();
             printBoard(board);
             turn += 1;
-            System.out.println("");
+            System.out.println();
             //gameEnd = true; //temporary, while coding is in progress
 
         }
@@ -482,7 +481,7 @@ public class Chess {
     public static void checkMoveSelection(String[][] board, int turn, int row2, int col2, int row1, int col1){
         if(turn % 2 == 0){
             if(board[row2][col2].equals("P") || board[row2][col2].equals("R") || board[row2][col2].equals("N") || board[row2][col2].equals("B") || board[row2][col2].equals("Q") || board[row2][col2].equals("K") || board[row2][col2].equals(" ") && pieceMovement(board,row2,col2,row1,col1) == false){
-                System.out.println("");
+                System.out.println();
                 System.out.println("Invalid selection, please re-enter values.");
                 System.out.print("Row: ");
                 row2 = kb.nextInt();
@@ -495,9 +494,9 @@ public class Chess {
                 if(isKingCheck(board, turn, row2, col2)){
                     board[row1][col1] = board[row2][col2];
                     board[row2][col2] = " ";
-                    System.out.println("");
+                    System.out.println();
                     System.out.println("Invalid, your king is still in check.");
-                    System.out.println("");
+                    System.out.println();
                     playChess(board,turn,gameEnd,row1,col1,row2,col2);
                 }
             }
@@ -505,7 +504,7 @@ public class Chess {
         }
         else{
             if(board[row2][col2].equals("p") || board[row2][col2].equals("r") || board[row2][col2].equals("n") || board[row2][col2].equals("b") || board[row2][col2].equals("q") || board[row2][col2].equals("k") || board[row2][col2].equals(" ") && pieceMovement(board,row2,col2,row1,col1) == false){
-                System.out.println("");
+                System.out.println();
                 System.out.println("Invalid selection, please re-enter values.");
                 System.out.print("Row: ");
                 row2 = kb.nextInt();
@@ -518,9 +517,9 @@ public class Chess {
                 if(isKingCheck(board, turn, row2, col2)){
                     board[row1][col1] = board[row2][col2];
                     board[row2][col2] = " ";
-                    System.out.println("");
+                    System.out.println();
                     System.out.println("Invalid, your king is still in check.");
-                    System.out.println("");
+                    System.out.println();
                     playChess(board,turn,gameEnd,row1,col1,row2,col2);
                 }
             }
@@ -770,10 +769,10 @@ public class Chess {
                 }
                 iteration += 1;
             }
-            System.out.println("");
+            System.out.println();
             System.out.println("  ---------------------------------");
         }
-        System.out.println("");
+        System.out.println();
 
     }
 
